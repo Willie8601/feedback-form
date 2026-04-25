@@ -759,12 +759,12 @@
     const getMulti = (group) => [...document.querySelectorAll(`.pill[data-group="${group}"].selected, .pill[data-group="${group}"].selected-good, .pill[data-group="${group}"].selected-bad`)]
       .map(p => p.dataset.value).join('、');
 
-    const headers = ['時間戳記','姓名','年齡區間','性別','購買原因','得知管道','每月預算','合身程度','穿著舒適度','搭配場合','品質優點','品質缺點','整體滿意度','推薦意願','其他意見'];
+    const headers = ['時間戳記','姓名','性別','年齡區間','購買原因','得知管道','每月預算','合身程度','穿著舒適度','搭配場合','品質優點','品質缺點','整體滿意度','推薦意願','其他意見'];
     const values  = [
       new Date().toLocaleString('zh-TW'),
       document.querySelector('[name="name"]').value.trim(),
-      document.getElementById('age-hidden').value,
       document.getElementById('gender-hidden').value,
+      document.getElementById('age-hidden').value,
       document.getElementById('discovery-hidden').value,
       getMulti('reason'),
       document.getElementById('budget-hidden').value,

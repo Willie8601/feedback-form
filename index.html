@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>您的穿搭哲學，我們也想學！</title>
+<meta name="description" content="只要 1 分鐘！分享您的穿搭習慣與喜好，幫助我們規劃更好的服飾 🙏">
+<meta property="og:title" content="您的穿搭哲學，我們也想學！">
+<meta property="og:description" content="只要 1 分鐘！分享您的穿搭習慣與喜好，幫助我們規劃更好的服飾 🙏">
+<meta property="og:type" content="website">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAF8F5;
+    --card: #FFFFFF;
+    --ink: #1A1714;
+    --ink-soft: #5C5753;
+    --ink-faint: #9E9A96;
+    --accent: #C4703A;
+    --accent-light: #F5E8DC;
+    --accent-dark: #9E5328;
+    --border: #E8E3DC;
+    --border-focus: #C4703A;
+    --shadow: 0 2px 16px rgba(26,23,20,0.07);
+    --shadow-lg: 0 8px 40px rgba(26,23,20,0.12);
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 40px 16px 80px;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(196,112,58,0.08) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 28px 24px 24px;
+    background: var(--card);
+    border-radius: 16px;
+    box-shadow: var(--shadow-lg);
+    border-top: 4px solid var(--accent);
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent-light), transparent);
+  }
+  .header h1 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: .02em;
+    margin-bottom: 8px;
+  }
+  .header p {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+  .header-badge {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 4px 12px;
+    background: var(--accent-light);
+    color: var(--accent-dark);
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .04em;
+  }
+
+  .section {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+    overflow: hidden;
+    transition: box-shadow .2s;
+  }
+  .section:hover { box-shadow: var(--shadow-lg); }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 18px 24px 16px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(135deg, #FDFCFB 0%, var(--bg) 100%);
+  }
+  .section-num {
+    width: 28px; height: 28px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: .04em;
+  }
+
+  .section-body { padding: 24px; }
+
+  .question-group { margin-bottom: 28px; }
+  .question-group:last-child { margin-bottom: 0; }
+
+  .question-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+  .question-hint {
+    display: block;
+    font-size: 12px;
+    color: var(--ink-faint);
+    font-weight: 300;
+    margin-top: 3px;
+  }
+
+  .text-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    background: var(--bg);
+    transition: border-color .2s, box-shadow .2s;
+    outline: none;
+  }
+  .text-input:focus {
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px rgba(196,112,58,0.12);
+    background: #fff;
+  }
+  .text-input::placeholder { color: var(--ink-faint); }
+  textarea.text-input { resize: vertical; min-height: 100px; line-height: 1.6; }
+
+  .pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill {
+    padding: 8px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 100px;
+    background: var(--bg);
+    color: var(--ink-soft);
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all .18s;
+    user-select: none;
+    line-height: 1;
+  }
+  .pill:hover { border-color: var(--accent); color: var(--accent-dark); background: var(--accent-light); }
+  .pill.selected { border-color: var(--accent); background: var(--accent); color: #fff; font-weight: 500; }
+
+  .age-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+  }
+  @media (max-width: 480px) { .age-grid { grid-template-columns: repeat(3, 1fr); } }
+  .age-pill {
+    padding: 9px 4px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg);
+    color: var(--ink-soft);
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    cursor: pointer;
+    text-align: center;
+    transition: all .18s;
+    user-select: none;
+  }
+  .age-pill:hover { border-color: var(--accent); color: var(--accent-dark); background: var(--accent-light); }
+  .age-pill.selected { border-color: var(--accent); background: var(--accent); color: #fff; font-weight: 500; }
+
+  .progress-bar { height: 3px; background: var(--border); border-radius: 2px; margin-bottom: 28px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent-light), var(--accent)); border-radius: 2px; transition: width .3s; width: 0%; }
+
+  .submit-wrap { padding: 32px 24px; text-align: center; }
+  .btn-submit {
+    display: inline-block;
+    padding: 16px 56px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 100px;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: .06em;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(196,112,58,0.35);
+    transition: all .2s;
+  }
+  .btn-submit:hover { background: var(--accent-dark); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(196,112,58,0.4); }
+  .btn-submit:active { transform: translateY(0); }
+  .submit-note { margin-top: 14px; font-size: 12px; color: var(--ink-faint); }
+
+  .success-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(250,248,245,0.96);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 32px;
+  }
+  .success-overlay.show { display: flex; }
+  .success-icon { font-size: 56px; margin-bottom: 20px; }
+  .success-overlay h2 { font-family: 'Noto Serif TC', serif; font-size: 24px; color: var(--ink); margin-bottom: 10px; }
+  .success-overlay p { font-size: 14px; color: var(--ink-soft); line-height: 1.7; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>您的穿搭哲學，<br>我們也想學！</h1>
+    <p>這份問卷幫助我們了解您的穿搭習慣與喜好 🙏<br>您的回答將作為我們規劃服飾的重要參考</p>
+    <span class="header-badge">✦ 完全匿名・只要 1 分鐘</span>
+  </div>
+
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+  <form id="surveyForm">
+
+    <!-- 01 基本資料 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">01</div>
+        <span class="section-title">基本資料</span>
+      </div>
+      <div class="section-body">
+
+        <div class="question-group">
+          <label class="question-label">Q1．您的性別？<span style="color:#B84C3A;font-size:13px"> *</span></label>
+          <div class="pills">
+            <div class="pill" data-group="gender" data-single="true" data-value="女性">女性</div>
+            <div class="pill" data-group="gender" data-single="true" data-value="男性">男性</div>
+            <div class="pill" data-group="gender" data-single="true" data-value="不便透露">不便透露</div>
+          </div>
+          <input type="hidden" name="gender" id="gender-hidden">
+        </div>
+
+        <div class="question-group">
+          <label class="question-label">Q2．您的年齡區間？<span style="color:#B84C3A;font-size:13px"> *</span></label>
+          <div class="age-grid">
+            <div class="age-pill" data-group="age" data-value="未滿20歲">未滿20歲</div>
+            <div class="age-pill" data-group="age" data-value="20-24歲">20–24歲</div>
+            <div class="age-pill" data-group="age" data-value="25-29歲">25–29歲</div>
+            <div class="age-pill" data-group="age" data-value="30-34歲">30–34歲</div>
+            <div class="age-pill" data-group="age" data-value="35-39歲">35–39歲</div>
+            <div class="age-pill" data-group="age" data-value="40-44歲">40–44歲</div>
+            <div class="age-pill" data-group="age" data-value="45-49歲">45–49歲</div>
+            <div class="age-pill" data-group="age" data-value="50-54歲">50–54歲</div>
+            <div class="age-pill" data-group="age" data-value="55-59歲">55–59歲</div>
+            <div class="age-pill" data-group="age" data-value="60-64歲">60–64歲</div>
+            <div class="age-pill" data-group="age" data-value="65歲以上">65歲以上</div>
+          </div>
+          <input type="hidden" name="age" id="age-hidden">
+        </div>
+
+        <div class="question-group">
+          <label class="question-label">Q3．您目前的職業狀態？<span style="color:#B84C3A;font-size:13px"> *</span></label>
+          <div class="pills">
+            <div class="pill" data-group="occupation" data-single="true" data-value="全職上班">全職上班</div>
+            <div class="pill" data-group="occupation" data-single="true" data-value="在校學生">在校學生</div>
+            <div class="pill" data-group="occupation" data-single="true" data-value="自由接案">自由接案</div>
+            <div class="pill" data-group="occupation" data-single="true" data-value="家庭主婦">家庭主婦</div>
+            <div class="pill" data-group="occupation" data-single="true" data-value="兼職打工">兼職打工</div>
+            <div class="pill" data-group="occupation" data-single="true" data-value="自行創業">自行創業</div>
+            <div class="pill" data-group="occupation" data-single="true" data-value="目前待業">目前待業</div>
+            <div class="pill" data-group="occupation" data-single="true" data-value="已經退休">已經退休</div>
+          </div>
+          <input type="hidden" name="occupation" id="occupation-hidden">
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 02 購物習慣 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">02</div>
+        <span class="section-title">購物習慣</span>
+      </div>
+      <div class="section-body">
+
+        <div class="question-group">
+          <label class="question-label">Q4．您平均每月購買服飾的頻率？</label>
+          <div class="pills">
+            <div class="pill" data-group="frequency" data-single="true" data-value="2件以內">2 件以內</div>
+            <div class="pill" data-group="frequency" data-single="true" data-value="3-5件">3–5 件</div>
+            <div class="pill" data-group="frequency" data-single="true" data-value="5件以上">5 件以上</div>
+          </div>
+          <input type="hidden" name="frequency" id="frequency-hidden">
+        </div>
+
+        <div class="question-group">
+          <label class="question-label">Q5．您平均每月花在服飾上的預算？</label>
+          <div class="pills">
+            <div class="pill" data-group="budget" data-single="true" data-value="$1000以下">$1,000 以下</div>
+            <div class="pill" data-group="budget" data-single="true" data-value="$1000-2000">$1,000–2,000</div>
+            <div class="pill" data-group="budget" data-single="true" data-value="$2000-3000">$2,000–3,000</div>
+            <div class="pill" data-group="budget" data-single="true" data-value="$3000-4000">$3,000–4,000</div>
+            <div class="pill" data-group="budget" data-single="true" data-value="$4000-5000">$4,000–5,000</div>
+            <div class="pill" data-group="budget" data-single="true" data-value="$5000以上">$5,000 以上</div>
+          </div>
+          <input type="hidden" name="budget" id="budget-hidden">
+        </div>
+
+        <div class="question-group">
+          <label class="question-label">Q6．您最常在哪裡購買服飾？<span class="question-hint">可多選</span></label>
+          <div class="pills">
+            <div class="pill" data-group="channel" data-value="蝦皮購物">蝦皮購物</div>
+            <div class="pill" data-group="channel" data-value="實體店面">實體店面</div>
+            <div class="pill" data-group="channel" data-value="社群平台">社群平台</div>
+            <div class="pill" data-group="channel" data-value="品牌官網">品牌官網</div>
+            <div class="pill" data-group="channel" data-value="其他平台">其他平台</div>
+            <div class="pill" data-group="channel" data-value="二手平台">二手平台</div>
+          </div>
+        </div>
+
+        <div class="question-group">
+          <label class="question-label">Q7．您通常如何發現新的服飾品牌？<span class="question-hint">可多選</span></label>
+          <div class="pills">
+            <div class="pill" data-group="discovery" data-value="蝦皮搜尋">蝦皮搜尋</div>
+            <div class="pill" data-group="discovery" data-value="蝦皮廣告">蝦皮廣告</div>
+            <div class="pill" data-group="discovery" data-value="社群廣告">社群廣告</div>
+            <div class="pill" data-group="discovery" data-value="社群貼文">社群貼文</div>
+            <div class="pill" data-group="discovery" data-value="網路搜尋">網路搜尋</div>
+            <div class="pill" data-group="discovery" data-value="網紅推薦">網紅推薦</div>
+            <div class="pill" data-group="discovery" data-value="親友推薦">親友推薦</div>
+            <div class="pill" data-group="discovery" data-value="老客回購">老客回購</div>
+            <div class="pill" data-group="discovery" data-value="實體活動">實體活動</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 03 風格與偏好 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">03</div>
+        <span class="section-title">穿搭偏好</span>
+      </div>
+      <div class="section-body">
+
+        <div class="question-group">
+          <label class="question-label">Q8．您購買服飾時最在意什麼？<span class="question-hint">可多選</span></label>
+          <div class="pills">
+            <div class="pill" data-group="priority" data-value="價格實惠">價格實惠</div>
+            <div class="pill" data-group="priority" data-value="版型設計">版型設計</div>
+            <div class="pill" data-group="priority" data-value="材質品質">材質品質</div>
+            <div class="pill" data-group="priority" data-value="好搭配">好搭配</div>
+            <div class="pill" data-group="priority" data-value="顏色選擇">顏色選擇</div>
+            <div class="pill" data-group="priority" data-value="耐穿耐用">耐穿耐用</div>
+            <div class="pill" data-group="priority" data-value="快速出貨">快速出貨</div>
+            <div class="pill" data-group="priority" data-value="品牌信任">品牌信任</div>
+            <div class="pill" data-group="priority" data-value="風格一致">風格一致</div>
+            <div class="pill" data-group="priority" data-value="退換方便">退換方便</div>
+            <div class="pill" data-group="priority" data-value="永續環保">永續環保</div>
+            <div class="pill" data-group="priority" data-value="品牌知名度">品牌知名度</div>
+          </div>
+        </div>
+
+        <div class="question-group">
+          <label class="question-label">Q9．您平常的穿搭風格是？<span class="question-hint">可多選</span></label>
+          <div class="pills">
+            <div class="pill" data-group="style" data-value="簡約基本">簡約基本</div>
+            <div class="pill" data-group="style" data-value="休閒舒適">休閒舒適</div>
+            <div class="pill" data-group="style" data-value="韓系穿搭">韓系穿搭</div>
+            <div class="pill" data-group="style" data-value="日系穿搭">日系穿搭</div>
+            <div class="pill" data-group="style" data-value="戶外運動">戶外運動</div>
+            <div class="pill" data-group="style" data-value="OL通勤">OL 通勤</div>
+            <div class="pill" data-group="style" data-value="歐美風格">歐美風格</div>
+            <div class="pill" data-group="style" data-value="街頭潮流">街頭潮流</div>
+            <div class="pill" data-group="style" data-value="復古文青">復古文青</div>
+          </div>
+        </div>
+
+        <div class="question-group">
+          <label class="question-label">Q10．您最常購買哪類單品？<span class="question-hint">可多選</span></label>
+          <div class="pills">
+            <div class="pill" data-group="items" data-value="上衣">上衣</div>
+            <div class="pill" data-group="items" data-value="褲子">褲子</div>
+            <div class="pill" data-group="items" data-value="外套">外套</div>
+            <div class="pill" data-group="items" data-value="裙子">裙子</div>
+            <div class="pill" data-group="items" data-value="洋裝">洋裝</div>
+            <div class="pill" data-group="items" data-value="內搭">內搭</div>
+            <div class="pill" data-group="items" data-value="配件">配件</div>
+            <div class="pill" data-group="items" data-value="襪子">襪子</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 04 消費動機 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">04</div>
+        <span class="section-title">開放留言</span>
+      </div>
+      <div class="section-body">
+
+        <div class="question-group">
+          <label class="question-label">Q11．有什麼話想對我們說？<span class="question-hint">選填</span></label>
+          <textarea class="text-input" name="comments" placeholder="例如：您最希望買到什麼樣的服飾、目前市場上缺少什麼…"></textarea>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <div class="section">
+      <div class="submit-wrap">
+        <button type="submit" class="btn-submit">送出問卷</button>
+        <p class="submit-note">您的回答將幫助我們規劃更好的服飾，感謝您！</p>
+      </div>
+    </div>
+
+  </form>
+</div>
+
+<!-- Success overlay -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-icon">🎉</div>
+  <h2>感謝您的參與！</h2>
+  <p>您寶貴的意見將幫助我們<br>打造更符合您需求的服飾 💛</p>
+</div>
+
+<script>
+  // Single-select pills
+  document.querySelectorAll('.pill[data-single="true"]').forEach(pill => {
+    pill.addEventListener('click', () => {
+      const group = pill.dataset.group;
+      document.querySelectorAll(`.pill[data-group="${group}"]`).forEach(p => p.classList.remove('selected'));
+      pill.classList.add('selected');
+      const hidden = document.getElementById(`${group}-hidden`);
+      if (hidden) hidden.value = pill.dataset.value;
+      updateProgress();
+    });
+  });
+
+  // Multi-select pills
+  document.querySelectorAll('.pill:not([data-single])').forEach(pill => {
+    pill.addEventListener('click', () => {
+      pill.classList.toggle('selected');
+      updateProgress();
+    });
+  });
+
+  // Age pills
+  document.querySelectorAll('.age-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      document.querySelectorAll('.age-pill').forEach(p => p.classList.remove('selected'));
+      pill.classList.add('selected');
+      document.getElementById('age-hidden').value = pill.dataset.value;
+      updateProgress();
+    });
+  });
+
+  // Progress
+  function updateProgress() {
+    const totalGroups = 7;
+    let answered = 0;
+    const checkGroups = ['gender','age','occupation','budget','max_price','frequency'];
+    checkGroups.forEach(g => {
+      const el = document.getElementById(`${g}-hidden`);
+      if (el && el.value) answered++;
+    });
+    const pct = Math.round((answered / totalGroups) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+  }
+
+  // Submit
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzMwRct7Wwed70_Gpz1XJS3wB0cKO1RhqU28QVIBuIERN-r8EC-9TenlQ4-41gA3iuF_w/exec';
+
+  document.getElementById('surveyForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const btn = document.querySelector('.btn-submit');
+    btn.textContent = '送出中…';
+    btn.disabled = true;
+
+    const getMulti = (group) => [...document.querySelectorAll(`.pill[data-group="${group}"].selected`)]
+      .map(p => p.dataset.value).join('、');
+
+    const headers = ['時間戳記','性別','年齡區間','職業狀態','購買頻率','每月預算','購物平台','發現品牌','購買在意','穿搭風格','常買單品','其他意見'];
+    const values = [
+      new Date().toLocaleString('zh-TW'),
+      document.getElementById('gender-hidden').value,
+      document.getElementById('age-hidden').value,
+      document.getElementById('occupation-hidden').value,
+      document.getElementById('budget-hidden').value,
+      getMulti('channel'),
+      document.getElementById('frequency-hidden').value,
+      getMulti('style'),
+      getMulti('items'),
+      getMulti('priority'),
+      getMulti('discovery'),
+      document.querySelector('[name="comments"]').value.trim(),
+    ];
+
+    const params = new URLSearchParams();
+    headers.forEach((h, i) => params.append(h, values[i]));
+    params.append('json', JSON.stringify(headers.map((h, i) => ({ key: h, val: values[i] }))));
+
+    try {
+      await fetch(SCRIPT_URL + '?' + params.toString(), { method: 'GET', mode: 'no-cors' });
+      document.getElementById('successOverlay').classList.add('show');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (err) {
+      btn.textContent = '送出失敗，請再試一次';
+      btn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>

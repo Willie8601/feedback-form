@@ -679,74 +679,59 @@
 <script>
   document.addEventListener("DOMContentLoaded", function() {
 
-  // Single-select pills
-  document.querySelectorAll('.pill[data-single="true"]').forEach(pill => {
-    pill.addEventListener('click', () => {
-      const group = pill.dataset.group;
-      document.querySelectorAll(`.pill[data-group="${group}"]`).forEach(p => {
-        p.classList.remove('selected','selected-good','selected-bad');
+  // 單選 pills
+  document.querySelectorAll('.pill[data-single="true"]').forEach(function(pill) {
+    pill.addEventListener('click', function() {
+      var group = this.dataset.group;
+      document.querySelectorAll('.pill[data-group="' + group + '"][data-single="true"]').forEach(function(p) {
+        p.classList.remove('selected');
       });
-      pill.classList.add('selected');
-      const hidden = document.getElementById(`${group}-hidden`);
-      if (hidden) hidden.value = pill.dataset.value;
+      this.classList.add('selected');
+      var hidden = document.getElementById(group + '-hidden');
+      if (hidden) hidden.value = this.dataset.value;
       updateProgress();
     });
   });
 
-  // Multi-select pills
-  document.querySelectorAll('.pill:not([data-single])').forEach(pill => {
-    pill.addEventListener('click', () => {
-      const color = pill.dataset.color;
+  // 多選 pills
+  document.querySelectorAll('.pill:not([data-single="true"])').forEach(function(pill) {
+    var color = pill.dataset.color;
+    pill.addEventListener('click', function() {
       if (color === 'good') {
-        pill.classList.toggle('selected-good');
+        this.classList.toggle('selected-good');
       } else if (color === 'bad') {
-        pill.classList.toggle('selected-bad');
+        this.classList.toggle('selected-bad');
       } else {
-        pill.classList.toggle('selected');
+        this.classList.toggle('selected');
       }
       updateProgress();
     });
   });
 
-  // Age pills
-  document.querySelectorAll('.age-pill').forEach(pill => {
-    pill.addEventListener('click', () => {
-      document.querySelectorAll('.age-pill').forEach(p => p.classList.remove('selected'));
-      pill.classList.add('selected');
-      document.getElementById('age-hidden').value = pill.dataset.value;
+  // 年齡選項
+  document.querySelectorAll('.age-pill').forEach(function(pill) {
+    pill.addEventListener('click', function() {
+      document.querySelectorAll('.age-pill').forEach(function(p) {
+        p.classList.remove('selected');
+      });
+      this.classList.add('selected');
+      document.getElementById('age-hidden').value = this.dataset.value;
       updateProgress();
     });
   });
 
-  // Card choices
-  document.querySelectorAll('.card-choice').forEach(card => {
-    card.addEventListener('click', () => {
-      const group = card.dataset.group;
-      document.querySelectorAll(`.card-choice[data-group="${group}"]`).forEach(c => c.classList.remove('selected'));
-      card.classList.add('selected');
-      const hidden = document.getElementById(`${group}-hidden`);
-      if (hidden) hidden.value = card.dataset.value;
-      updateProgress();
-    });
-  });
-
-  // Sliders
-  // Progress
+  // 進度條
   function updateProgress() {
-    const totalGroups = 10;
-    let answered = 0;
-    const nameVal = document.querySelector('[name="name"]').value.trim();
-    if (nameVal) answered++;
-    const checkGroups = ['age','gender','discovery','budget','fit','comfort','satisfaction','recommend'];
-    checkGroups.forEach(g => {
-      const el = document.getElementById(`${g}-hidden`);
+    var total = 8;
+    var answered = 0;
+    var nameVal = document.querySelector('[name="name"]');
+    if (nameVal && nameVal.value.trim()) answered++;
+    ['gender','age','discovery','budget','fit','comfort','satisfaction','recommend'].forEach(function(g) {
+      var el = document.getElementById(g + '-hidden');
       if (el && el.value) answered++;
     });
-    const pct = Math.round((answered / totalGroups) * 100);
-    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressFill').style.width = Math.round((answered / total) * 100) + '%';
   }
-
-  document.querySelector('[name="name"]').addEventListener('input', updateProgress);
 
   // Submit
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbytjQWsKfVzP-_4bYJSywDkBUGHMlH-6ni9DFNXYkh_Vtoj30YK3vgRWGokReRusYVdIw/exec';

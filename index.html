@@ -281,7 +281,7 @@
       <div class="section-body">
 
         <div class="question-group">
-          <label class="question-label">Q1．您的性別？<span style="color:#B84C3A;font-size:13px"> *</span></label>
+          <label class="question-label">Q1．您的性別？</label>
           <div class="pills">
             <div class="pill" data-group="gender" data-single="true" data-value="女性">女性</div>
             <div class="pill" data-group="gender" data-single="true" data-value="男性">男性</div>
@@ -291,7 +291,7 @@
         </div>
 
         <div class="question-group">
-          <label class="question-label">Q2．您的年齡區間？<span style="color:#B84C3A;font-size:13px"> *</span></label>
+          <label class="question-label">Q2．您的年齡區間？</label>
           <div class="age-grid">
             <div class="age-pill" data-group="age" data-value="未滿20歲">未滿20歲</div>
             <div class="age-pill" data-group="age" data-value="20-24歲">20–24歲</div>
@@ -309,7 +309,7 @@
         </div>
 
         <div class="question-group">
-          <label class="question-label">Q3．您目前的職業狀態？<span style="color:#B84C3A;font-size:13px"> *</span></label>
+          <label class="question-label">Q3．您目前的職業狀態？</label>
           <div class="pills">
             <div class="pill" data-group="occupation" data-single="true" data-value="全職上班">全職上班</div>
             <div class="pill" data-group="occupation" data-single="true" data-value="在校學生">在校學生</div>
@@ -528,6 +528,56 @@
 
   document.getElementById('surveyForm').addEventListener('submit', async function(e) {
     e.preventDefault();
+
+    // Validate required fields
+    const requiredSingle = ['gender','age','occupation','budget','frequency'];
+    const requiredMulti = ['channel','discovery','priority','style','items'];
+    let missing = [];
+
+    requiredSingle.forEach(g => {
+      const el = document.getElementById(`${g}-hidden`);
+      if (!el || !el.value) missing.push(g);
+    });
+    requiredMulti.forEach(g => {
+      const selected = document.querySelectorAll(`.pill[data-group="${g}"].selected`);
+      if (selected.length === 0) missing.push(g);
+    });
+
+    if (missing.length > 0) {
+      alert('請填寫所有必填題目後再送出！');
+      return;
+    }
+
+    // 必答驗證
+    const required = [
+      { id: 'gender-hidden', label: 'Q1 性別' },
+      { id: 'age-hidden', label: 'Q2 年齡區間' },
+      { id: 'occupation-hidden', label: 'Q3 職業狀態' },
+      { id: 'frequency-hidden', label: 'Q4 購買頻率' },
+      { id: 'budget-hidden', label: 'Q5 每月預算' },
+    ];
+    const requiredMulti = [
+      { group: 'channel', label: 'Q6 購物平台' },
+      { group: 'discovery', label: 'Q7 發現品牌' },
+      { group: 'priority', label: 'Q8 購買在意' },
+      { group: 'style', label: 'Q9 穿搭風格' },
+      { group: 'items', label: 'Q10 常買單品' },
+    ];
+
+    for (const f of required) {
+      const el = document.getElementById(f.id);
+      if (!el || !el.value) {
+        alert(`請回答：${f.label}`);
+        return;
+      }
+    }
+    for (const f of requiredMulti) {
+      const selected = document.querySelectorAll(`.pill[data-group="${f.group}"].selected`);
+      if (selected.length === 0) {
+        alert(`請回答：${f.label}`);
+        return;
+      }
+    }
 
     const btn = document.querySelector('.btn-submit');
     btn.textContent = '送出中…';

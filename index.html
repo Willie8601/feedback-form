@@ -563,7 +563,7 @@ window.onload = function() {
     }
     for (var i = 0; i < multiChecks.length; i++) {
       var sel = document.querySelectorAll('.pill[data-group="' + multiChecks[i].group + '"].selected');
-      if (sel.length === 0) { alert('請回答：' + multiChecks[i].label); return; }
+      if (sel.length === 0) { alert('請完整回答：' + multiChecks[i].label); return; }
     }
 
     var btn = document.querySelector('.btn-submit');

@@ -775,6 +775,8 @@ window.onload = function() {
     var multiChecks = [
       {group: 'reason', label: 'Q4 購買原因'},
       {group: 'style', label: 'Q9 搭配場合'},
+      {group: 'quality-good', label: 'Q10 品質優點'},
+      {group: 'quality-bad', label: 'Q10 品質缺點'},
     ];
 
     var nameVal = document.querySelector('[name="name"]').value.trim();
@@ -785,8 +787,10 @@ window.onload = function() {
       if (!el || !el.value) { alert('請回答：' + checks[i].label); return; }
     }
     for (var i = 0; i < multiChecks.length; i++) {
-      var sel = document.querySelectorAll('.pill[data-group="' + multiChecks[i].group + '"].selected');
-      if (sel.length === 0) { alert('請回答：' + multiChecks[i].label); return; }
+      var cls = multiChecks[i].group === 'quality-good' ? 'selected-good' : 
+                multiChecks[i].group === 'quality-bad' ? 'selected-bad' : 'selected';
+      var sel = document.querySelectorAll('.pill[data-group="' + multiChecks[i].group + '"].' + cls);
+      if (sel.length === 0) { alert('請完整回答：' + multiChecks[i].label); return; }
     }
 
     var btn = document.querySelector('.btn-submit');

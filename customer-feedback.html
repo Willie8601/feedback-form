@@ -677,6 +677,8 @@
 </div>
 
 <script>
+  document.addEventListener("DOMContentLoaded", function() {
+
   // Single-select pills
   document.querySelectorAll('.pill[data-single="true"]').forEach(pill => {
     pill.addEventListener('click', () => {
@@ -848,6 +850,8 @@
       btn.textContent = '送出失敗，請再試一次';
       btn.disabled = false;
     }
+  });
+
   });
 </script>
 <iframe name="hidden_iframe" style="display:none"></iframe>

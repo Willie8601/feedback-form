@@ -762,36 +762,45 @@ window.onload = function() {
   document.getElementById('feedbackForm').onsubmit = async function(e) {
     e.preventDefault();
 
-    var checks = [
-      {id: 'gender-hidden', label: 'Q2 性別'},
-      {id: 'age-hidden', label: 'Q3 年齡區間'},
-      {id: 'discovery-hidden', label: 'Q5 得知管道'},
-      {id: 'budget-hidden', label: 'Q6 每月預算'},
-      {id: 'fit-hidden', label: 'Q7 合身程度'},
-      {id: 'comfort-hidden', label: 'Q8 舒適感'},
-      {id: 'satisfaction-hidden', label: 'Q11 整體滿意度'},
-      {id: 'recommend-hidden', label: 'Q12 推薦意願'},
-    ];
-    var multiChecks = [
-      {group: 'reason', label: 'Q4 購買原因'},
-      {group: 'style', label: 'Q9 搭配場合'},
-      {group: 'quality-good', label: 'Q10 品質優點'},
-      {group: 'quality-bad', label: 'Q10 品質缺點'},
-    ];
-
+    // 按題號順序驗證
     var nameVal = document.querySelector('[name="name"]').value.trim();
     if (!nameVal) { alert('請回答：Q1 姓名'); return; }
 
-    for (var i = 0; i < checks.length; i++) {
-      var el = document.getElementById(checks[i].id);
-      if (!el || !el.value) { alert('請回答：' + checks[i].label); return; }
-    }
-    for (var i = 0; i < multiChecks.length; i++) {
-      var cls = multiChecks[i].group === 'quality-good' ? 'selected-good' : 
-                multiChecks[i].group === 'quality-bad' ? 'selected-bad' : 'selected';
-      var sel = document.querySelectorAll('.pill[data-group="' + multiChecks[i].group + '"].' + cls);
-      if (sel.length === 0) { alert('請完整回答：' + multiChecks[i].label); return; }
-    }
+    var g2 = document.getElementById('gender-hidden');
+    if (!g2 || !g2.value) { alert('請回答：Q2 性別'); return; }
+
+    var g3 = document.getElementById('age-hidden');
+    if (!g3 || !g3.value) { alert('請回答：Q3 年齡區間'); return; }
+
+    var q4 = document.querySelectorAll('.pill[data-group="reason"].selected');
+    if (q4.length === 0) { alert('請回答：Q4 購買原因'); return; }
+
+    var g5 = document.getElementById('discovery-hidden');
+    if (!g5 || !g5.value) { alert('請回答：Q5 得知管道'); return; }
+
+    var g6 = document.getElementById('budget-hidden');
+    if (!g6 || !g6.value) { alert('請回答：Q6 每月預算'); return; }
+
+    var g7 = document.getElementById('fit-hidden');
+    if (!g7 || !g7.value) { alert('請回答：Q7 合身程度'); return; }
+
+    var g8 = document.getElementById('comfort-hidden');
+    if (!g8 || !g8.value) { alert('請回答：Q8 舒適感'); return; }
+
+    var q9 = document.querySelectorAll('.pill[data-group="style"].selected');
+    if (q9.length === 0) { alert('請回答：Q9 搭配場合'); return; }
+
+    var q10good = document.querySelectorAll('.pill[data-group="quality-good"].selected-good');
+    if (q10good.length === 0) { alert('請回答：Q10 品質優點'); return; }
+
+    var q10bad = document.querySelectorAll('.pill[data-group="quality-bad"].selected-bad');
+    if (q10bad.length === 0) { alert('請回答：Q10 品質缺點'); return; }
+
+    var g11 = document.getElementById('satisfaction-hidden');
+    if (!g11 || !g11.value) { alert('請回答：Q11 整體滿意度'); return; }
+
+    var g12 = document.getElementById('recommend-hidden');
+    if (!g12 || !g12.value) { alert('請回答：Q12 推薦意願'); return; }
 
     var btn = document.querySelector('.btn-submit');
     btn.textContent = '送出中…';

@@ -677,131 +677,130 @@
 </div>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
+window.onload = function() {
 
-  // 單選 pills
-  document.querySelectorAll('.pill[data-single="true"]').forEach(function(pill) {
-    pill.addEventListener('click', function() {
-      var group = this.dataset.group;
-      document.querySelectorAll('.pill[data-group="' + group + '"][data-single="true"]').forEach(function(p) {
-        p.classList.remove('selected');
-      });
+  // 單選
+  var singlePills = document.querySelectorAll('.pill[data-single="true"]');
+  for (var i = 0; i < singlePills.length; i++) {
+    singlePills[i].onclick = function() {
+      var group = this.getAttribute('data-group');
+      var allInGroup = document.querySelectorAll('.pill[data-group="' + group + '"][data-single="true"]');
+      for (var j = 0; j < allInGroup.length; j++) {
+        allInGroup[j].classList.remove('selected');
+      }
       this.classList.add('selected');
       var hidden = document.getElementById(group + '-hidden');
-      if (hidden) hidden.value = this.dataset.value;
+      if (hidden) hidden.value = this.getAttribute('data-value');
       updateProgress();
-    });
-  });
+    };
+  }
 
-  // 多選 pills
-  document.querySelectorAll('.pill:not([data-single="true"])').forEach(function(pill) {
-    var color = pill.dataset.color;
-    pill.addEventListener('click', function() {
-      if (color === 'good') {
-        this.classList.toggle('selected-good');
-      } else if (color === 'bad') {
-        this.classList.toggle('selected-bad');
-      } else {
-        this.classList.toggle('selected');
+  // 多選一般
+  var multiPills = document.querySelectorAll('.pill:not([data-single="true"]):not([data-color])');
+  for (var i = 0; i < multiPills.length; i++) {
+    multiPills[i].onclick = function() {
+      this.classList.toggle('selected');
+      updateProgress();
+    };
+  }
+
+  // 多選 good
+  var goodPills = document.querySelectorAll('.pill[data-color="good"]');
+  for (var i = 0; i < goodPills.length; i++) {
+    goodPills[i].onclick = function() {
+      this.classList.toggle('selected-good');
+      updateProgress();
+    };
+  }
+
+  // 多選 bad
+  var badPills = document.querySelectorAll('.pill[data-color="bad"]');
+  for (var i = 0; i < badPills.length; i++) {
+    badPills[i].onclick = function() {
+      this.classList.toggle('selected-bad');
+      updateProgress();
+    };
+  }
+
+  // 年齡
+  var agePills = document.querySelectorAll('.age-pill');
+  for (var i = 0; i < agePills.length; i++) {
+    agePills[i].onclick = function() {
+      for (var j = 0; j < agePills.length; j++) {
+        agePills[j].classList.remove('selected');
       }
-      updateProgress();
-    });
-  });
-
-  // 年齡選項
-  document.querySelectorAll('.age-pill').forEach(function(pill) {
-    pill.addEventListener('click', function() {
-      document.querySelectorAll('.age-pill').forEach(function(p) {
-        p.classList.remove('selected');
-      });
       this.classList.add('selected');
-      document.getElementById('age-hidden').value = this.dataset.value;
+      document.getElementById('age-hidden').value = this.getAttribute('data-value');
       updateProgress();
-    });
-  });
+    };
+  }
 
-  // 進度條
   function updateProgress() {
-    var total = 8;
+    var total = 12;
     var answered = 0;
-    var nameVal = document.querySelector('[name="name"]');
-    if (nameVal && nameVal.value.trim()) answered++;
+    var nameEl = document.querySelector('[name="name"]');
+    if (nameEl && nameEl.value.trim()) answered++;
     ['gender','age','discovery','budget','fit','comfort','satisfaction','recommend'].forEach(function(g) {
       var el = document.getElementById(g + '-hidden');
       if (el && el.value) answered++;
     });
-    document.getElementById('progressFill').style.width = Math.round((answered / total) * 100) + '%';
+    ['reason','style'].forEach(function(g) {
+      var sel = document.querySelectorAll('.pill[data-group="' + g + '"].selected');
+      if (sel.length > 0) answered++;
+    });
+    var goodSel = document.querySelectorAll('.pill[data-group="quality-good"].selected-good');
+    if (goodSel.length > 0) answered++;
+    var pct = Math.round((answered / total) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
   }
 
-  // Submit
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbytjQWsKfVzP-_4bYJSywDkBUGHMlH-6ni9DFNXYkh_Vtoj30YK3vgRWGokReRusYVdIw/exec';
+  document.querySelector('[name="name"]').oninput = updateProgress;
 
-  document.getElementById('feedbackForm').addEventListener('submit', async function(e) {
+  // Submit
+  var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbytjQWsKfVzP-_4bYJSywDkBUGHMlH-6ni9DFNXYkh_Vtoj30YK3vgRWGokReRusYVdIw/exec';
+
+  document.getElementById('feedbackForm').onsubmit = async function(e) {
     e.preventDefault();
 
-    // Validate required fields
-    const requiredSingle = ['gender','age','reason','discovery','budget','fit','comfort','satisfaction','recommend'];
-    const requiredMulti = ['style','quality-good','quality-bad'];
-    let missing = [];
+    var checks = [
+      {id: 'gender-hidden', label: 'Q2 性別'},
+      {id: 'age-hidden', label: 'Q3 年齡區間'},
+      {id: 'discovery-hidden', label: 'Q5 得知管道'},
+      {id: 'budget-hidden', label: 'Q6 每月預算'},
+      {id: 'fit-hidden', label: 'Q7 合身程度'},
+      {id: 'comfort-hidden', label: 'Q8 舒適感'},
+      {id: 'satisfaction-hidden', label: 'Q11 整體滿意度'},
+      {id: 'recommend-hidden', label: 'Q12 推薦意願'},
+    ];
+    var multiChecks = [
+      {group: 'reason', label: 'Q4 購買原因'},
+      {group: 'style', label: 'Q9 搭配場合'},
+    ];
 
-    requiredSingle.forEach(g => {
-      const el = document.getElementById(`${g}-hidden`);
-      if (!el || !el.value) missing.push(g);
-    });
-    requiredMulti.forEach(g => {
-      const selected = document.querySelectorAll(`.pill[data-group="${g}"].selected, .pill[data-group="${g}"].selected-good, .pill[data-group="${g}"].selected-bad`);
-      if (selected.length === 0) missing.push(g);
-    });
-    if (!document.querySelector('[name="name"]').value.trim()) missing.push('name');
-
-    if (missing.length > 0) {
-      alert('請填寫所有必填題目後再送出！');
-      return;
-    }
-
-    // 必答驗證
-    const nameVal = document.querySelector('[name="name"]').value.trim();
+    var nameVal = document.querySelector('[name="name"]').value.trim();
     if (!nameVal) { alert('請回答：Q1 姓名'); return; }
 
-    const required = [
-      { id: 'gender-hidden', label: 'Q2 性別' },
-      { id: 'age-hidden', label: 'Q3 年齡區間' },
-      { id: 'discovery-hidden', label: 'Q5 得知管道' },
-      { id: 'budget-hidden', label: 'Q6 每月預算' },
-      { id: 'fit-hidden', label: 'Q7 合身程度' },
-      { id: 'comfort-hidden', label: 'Q8 舒適感' },
-      { id: 'satisfaction-hidden', label: 'Q11 整體滿意度' },
-      { id: 'recommend-hidden', label: 'Q12 推薦意願' },
-    ];
-    const requiredMulti = [
-      { group: 'reason', label: 'Q4 購買原因' },
-      { group: 'style', label: 'Q9 搭配場合' },
-      { group: 'quality-good', label: 'Q10 品質優點' },
-    ];
-
-    for (const f of required) {
-      const el = document.getElementById(f.id);
-      if (!el || !el.value) {
-        alert(`請回答：${f.label}`);
-        return;
-      }
+    for (var i = 0; i < checks.length; i++) {
+      var el = document.getElementById(checks[i].id);
+      if (!el || !el.value) { alert('請回答：' + checks[i].label); return; }
     }
-    for (const f of requiredMulti) {
-      const selected = document.querySelectorAll(`.pill[data-group="${f.group}"].selected, .pill[data-group="${f.group}"].selected-good, .pill[data-group="${f.group}"].selected-bad`);
-      if (selected.length === 0) {
-        alert(`請回答：${f.label}`);
-        return;
-      }
+    for (var i = 0; i < multiChecks.length; i++) {
+      var sel = document.querySelectorAll('.pill[data-group="' + multiChecks[i].group + '"].selected');
+      if (sel.length === 0) { alert('請回答：' + multiChecks[i].label); return; }
     }
 
-    const btn = document.querySelector('.btn-submit');
+    var btn = document.querySelector('.btn-submit');
     btn.textContent = '送出中…';
     btn.disabled = true;
 
-    const getMulti = (group) => [...document.querySelectorAll(`.pill[data-group="${group}"].selected, .pill[data-group="${group}"].selected-good, .pill[data-group="${group}"].selected-bad`)]
-      .map(p => p.dataset.value).join('、');
+    function getMulti(group) {
+      var sel = document.querySelectorAll('.pill[data-group="' + group + '"].selected, .pill[data-group="' + group + '"].selected-good, .pill[data-group="' + group + '"].selected-bad');
+      var vals = [];
+      sel.forEach(function(p) { vals.push(p.getAttribute('data-value')); });
+      return vals.join('、');
+    }
 
-    const headers = ['時間戳記','姓名','性別','年齡區間','購買原因','得知管道','每月預算','合身程度','穿著舒適度','搭配場合','品質優點','品質缺點','整體滿意度','推薦意願','其他意見'];
+    const headers = ['時間戳記','姓名','性別','年齡區間','購買原因','得知管道','每月預算','合身程度','穿著舒適度','搭配場合','品質優點','品質缺點','整體滿意度','推薦意願','其他意見']
     const values  = [
       new Date().toLocaleString('zh-TW'),
       document.querySelector('[name="name"]').value.trim(),
@@ -820,24 +819,21 @@
       document.querySelector('[name="comments"]').value.trim(),
     ];
 
-    const params = new URLSearchParams();
-    headers.forEach((h, i) => params.append(h, values[i]));
-    params.append('json', JSON.stringify(headers.map((h, i) => ({ key: h, val: values[i] }))));
+    var params = new URLSearchParams();
+    headers.forEach(function(h, i) { params.append(h, values[i]); });
+    params.append('json', JSON.stringify(headers.map(function(h, i) { return {key: h, val: values[i]}; })));
 
     try {
-      await fetch(SCRIPT_URL + '?' + params.toString(), {
-        method: 'GET',
-        mode: 'no-cors',
-      });
+      await fetch(SCRIPT_URL + '?' + params.toString(), { method: 'GET', mode: 'no-cors' });
       document.getElementById('successOverlay').classList.add('show');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
       btn.textContent = '送出失敗，請再試一次';
       btn.disabled = false;
     }
-  });
+  };
 
-  });
+};
 </script>
 <iframe name="hidden_iframe" style="display:none"></iframe>
 </body>

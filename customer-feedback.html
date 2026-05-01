@@ -451,12 +451,12 @@
       <div class="section-body">
 
         <div class="question-group">
-          <label class="question-label">Q1．請問您的姓名或暱稱？<span class="required">*</span></label>
+          <label class="question-label">Q1．請問您的姓名或暱稱？</label>
           <input type="text" class="text-input" name="name" placeholder="請輸入姓名或暱稱" required>
         </div>
 
         <div class="question-group">
-          <label class="question-label">Q2．您的性別？<span class="required">*</span></label>
+          <label class="question-label">Q2．您的性別？</label>
           <div class="pills">
             <div class="pill" data-group="gender" data-single="true" data-value="女性">女性</div>
             <div class="pill" data-group="gender" data-single="true" data-value="男性">男性</div>
@@ -466,7 +466,7 @@
         </div>
 
         <div class="question-group">
-          <label class="question-label">Q3．您的年齡區間？<span class="required">*</span></label>
+          <label class="question-label">Q3．您的年齡區間？</label>
           <div class="age-grid" id="age-grid">
             <div class="age-pill" data-group="age" data-value="未滿20歲">未滿20歲</div>
             <div class="age-pill" data-group="age" data-value="20-24歲">20–24歲</div>
@@ -751,6 +751,61 @@
 
   document.getElementById('feedbackForm').addEventListener('submit', async function(e) {
     e.preventDefault();
+
+    // Validate required fields
+    const requiredSingle = ['gender','age','reason','discovery','budget','fit','comfort','satisfaction','recommend'];
+    const requiredMulti = ['style','quality-good','quality-bad'];
+    let missing = [];
+
+    requiredSingle.forEach(g => {
+      const el = document.getElementById(`${g}-hidden`);
+      if (!el || !el.value) missing.push(g);
+    });
+    requiredMulti.forEach(g => {
+      const selected = document.querySelectorAll(`.pill[data-group="${g}"].selected, .pill[data-group="${g}"].selected-good, .pill[data-group="${g}"].selected-bad`);
+      if (selected.length === 0) missing.push(g);
+    });
+    if (!document.querySelector('[name="name"]').value.trim()) missing.push('name');
+
+    if (missing.length > 0) {
+      alert('請填寫所有必填題目後再送出！');
+      return;
+    }
+
+    // 必答驗證
+    const nameVal = document.querySelector('[name="name"]').value.trim();
+    if (!nameVal) { alert('請回答：Q1 姓名'); return; }
+
+    const required = [
+      { id: 'gender-hidden', label: 'Q2 性別' },
+      { id: 'age-hidden', label: 'Q3 年齡區間' },
+      { id: 'discovery-hidden', label: 'Q5 得知管道' },
+      { id: 'budget-hidden', label: 'Q6 每月預算' },
+      { id: 'fit-hidden', label: 'Q7 合身程度' },
+      { id: 'comfort-hidden', label: 'Q8 舒適感' },
+      { id: 'satisfaction-hidden', label: 'Q11 整體滿意度' },
+      { id: 'recommend-hidden', label: 'Q12 推薦意願' },
+    ];
+    const requiredMulti = [
+      { group: 'reason', label: 'Q4 購買原因' },
+      { group: 'style', label: 'Q9 搭配場合' },
+      { group: 'quality-good', label: 'Q10 品質優點' },
+    ];
+
+    for (const f of required) {
+      const el = document.getElementById(f.id);
+      if (!el || !el.value) {
+        alert(`請回答：${f.label}`);
+        return;
+      }
+    }
+    for (const f of requiredMulti) {
+      const selected = document.querySelectorAll(`.pill[data-group="${f.group}"].selected, .pill[data-group="${f.group}"].selected-good, .pill[data-group="${f.group}"].selected-bad`);
+      if (selected.length === 0) {
+        alert(`請回答：${f.label}`);
+        return;
+      }
+    }
 
     const btn = document.querySelector('.btn-submit');
     btn.textContent = '送出中…';

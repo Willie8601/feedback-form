@@ -482,47 +482,60 @@
 <script>
   document.addEventListener("DOMContentLoaded", function() {
 
-  // Single-select pills
-  document.querySelectorAll('.pill[data-single="true"]').forEach(pill => {
-    pill.addEventListener('click', () => {
-      const group = pill.dataset.group;
-      document.querySelectorAll(`.pill[data-group="${group}"]`).forEach(p => p.classList.remove('selected'));
-      pill.classList.add('selected');
-      const hidden = document.getElementById(`${group}-hidden`);
-      if (hidden) hidden.value = pill.dataset.value;
+  // 單選 pills
+  document.querySelectorAll('.pill[data-single="true"]').forEach(function(pill) {
+    pill.addEventListener('click', function() {
+      var group = this.dataset.group;
+      document.querySelectorAll('.pill[data-group="' + group + '"][data-single="true"]').forEach(function(p) {
+        p.classList.remove('selected');
+      });
+      this.classList.add('selected');
+      var hidden = document.getElementById(group + '-hidden');
+      if (hidden) hidden.value = this.dataset.value;
       updateProgress();
     });
   });
 
-  // Multi-select pills
-  document.querySelectorAll('.pill:not([data-single])').forEach(pill => {
-    pill.addEventListener('click', () => {
-      pill.classList.toggle('selected');
+  // 多選 pills
+  document.querySelectorAll('.pill:not([data-single="true"])').forEach(function(pill) {
+    var color = pill.dataset.color;
+    pill.addEventListener('click', function() {
+      if (color === 'good') {
+        this.classList.toggle('selected-good');
+      } else if (color === 'bad') {
+        this.classList.toggle('selected-bad');
+      } else {
+        this.classList.toggle('selected');
+      }
       updateProgress();
     });
   });
 
-  // Age pills
-  document.querySelectorAll('.age-pill').forEach(pill => {
-    pill.addEventListener('click', () => {
-      document.querySelectorAll('.age-pill').forEach(p => p.classList.remove('selected'));
-      pill.classList.add('selected');
-      document.getElementById('age-hidden').value = pill.dataset.value;
+  // 年齡選項
+  document.querySelectorAll('.age-pill').forEach(function(pill) {
+    pill.addEventListener('click', function() {
+      document.querySelectorAll('.age-pill').forEach(function(p) {
+        p.classList.remove('selected');
+      });
+      this.classList.add('selected');
+      document.getElementById('age-hidden').value = this.dataset.value;
       updateProgress();
     });
   });
 
-  // Progress
+  // 進度條
   function updateProgress() {
-    const totalGroups = 7;
-    let answered = 0;
-    const checkGroups = ['gender','age','occupation','budget','max_price','frequency'];
-    checkGroups.forEach(g => {
-      const el = document.getElementById(`${g}-hidden`);
+    var total = 7;
+    var answered = 0;
+    ['gender','age','occupation','frequency','budget'].forEach(function(g) {
+      var el = document.getElementById(g + '-hidden');
       if (el && el.value) answered++;
     });
-    const pct = Math.round((answered / totalGroups) * 100);
-    document.getElementById('progressFill').style.width = pct + '%';
+    ['channel','discovery','priority','style','items'].forEach(function(g) {
+      var sel = document.querySelectorAll('.pill[data-group="' + g + '"].selected');
+      if (sel.length > 0) answered++;
+    });
+    document.getElementById('progressFill').style.width = Math.round((answered / total) * 100) + '%';
   }
 
   // Submit
